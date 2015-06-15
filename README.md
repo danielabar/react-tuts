@@ -13,6 +13,8 @@
     - [Use the `render` method](#use-the-render-method)
     - [Render component with `React.renderComponent`](#render-component-with-reactrendercomponent)
   - [JSX vs. React DOM](#jsx-vs-react-dom)
+  - [Managing State](#managing-state)
+  - [{this.state.titleMessage}](#thisstatetitlemessage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -102,3 +104,51 @@ JSX allows for writing HTML like nodes in JavaScript (because React has no templ
 An alternative to JSX is to use the React.DOM namespace.
 
 JSX is syntactic sugar on top of React.DOM.
+
+## Managing State
+
+[Example](lesson03/index.html)
+
+When state is changed, it causes React components to re-render. State is usually data that changes over time.
+For example, to toggle show/hide of a message box, the value of the toggle would be part of state.
+
+State can be set in the class using `getInitialState` function, which returns an Object literal. State values can be used in the render function, using curly brace notation.
+
+```javascript
+var MessageBox = React.createClass({
+  getInitialState: function() {
+    return {
+      isVisible: true,
+      titleMessage: 'Hello, World'
+    }
+  },
+  render: function() {
+    var inlineStyles = {
+      display: this.state.isVisible ? 'block' : 'none'
+    };
+
+    return (
+      <div className="container jumbotron" style={inlineStyles}>
+        <h2>{this.state.titleMessage}</h2>
+      </div>
+    );
+  }
+});
+
+var reactComponent = React.renderComponent(
+  <MessageBox />,
+  document.getElementById('app')
+);
+```
+
+State can be modified by calling `setState` function of reactComponent, and DOM will automatically be updated. For example, to make the message box appear hidden:
+
+```javascript
+reactComponent.setState({
+  isVisible: false
+});
+```
+
+_Reconciliation_ is the process by which React updates the DOM with each new render pass.
+When a new state change happens, React makes a new Virtual DOM tree, diffs it from the previous one,
+then only applies those diff's to the DOM.
