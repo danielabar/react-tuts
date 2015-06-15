@@ -1,0 +1,78 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>JSX vs React.DOM</title>
+  <meta name="description" content=" " />
+  <meta name="author" content=" " />
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="MobileOptimized" content="320" />
+  <!-- Use maximum-scale and user-scalable at your own risk. It disables pinch/zoom. Think about usability/accessibility before including.-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <link rel="stylesheet" type="text/css" href=" ">
+</head>
+<body>
+
+  <!-- container node -->
+  <div id="jsx"></div>
+
+  <!-- container node -->
+  <div id="dom"></div>
+
+  <script src="http://fb.me/react-0.11.1.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+
+  <script type="text/jsx">
+    /** @jsx React.DOM */
+
+    var MessageBoxJSX = React.createClass({
+      render: function() {
+        return (
+          // Can't use "class" because that's a reserved JS keyword
+          <div className="container">
+            <h1>Hello, World JSX</h1>
+            <SubMessage />
+          </div>
+        );
+      }
+    });
+
+    var MessageBoxDOM = React.createClass({
+      render: function() {
+
+        // simple
+        // return React.DOM.h1(null, 'Hello, World DOM');
+
+        // nested
+        return React.DOM.div(
+          { classname: 'container'},
+          React.DOM.h1(null, 'Hello World DOM'),
+          SubMessage(null)
+        );
+      }
+    });
+
+    var SubMessage = React.createClass({
+      render: function() {
+        return (
+          <small>Its good to see you</small>
+        );
+      }
+    });
+
+    var reactComponentJSX = React.renderComponent(
+      <MessageBoxJSX />,
+      document.getElementById('jsx')
+    );
+
+    var reactComponentDOM = React.renderComponent(
+      MessageBoxDOM(null),
+      document.getElementById('dom')
+    );
+
+  </script>
+
+</body>
+</html>

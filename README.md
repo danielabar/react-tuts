@@ -1,3 +1,25 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Getting Started with React.js](#getting-started-with-reactjs)
+  - [What is React?](#what-is-react)
+    - [Virtual DOM](#virtual-dom)
+    - [Components](#components)
+    - [JSX](#jsx)
+  - [Hello World Component](#hello-world-component)
+    - [Properly transform JSX](#properly-transform-jsx)
+    - [Define component with `React.createClass`](#define-component-with-reactcreateclass)
+    - [Use the `render` method](#use-the-render-method)
+    - [Render component with `React.renderComponent`](#render-component-with-reactrendercomponent)
+  - [JSX vs. React DOM](#jsx-vs-react-dom)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Getting Started with React.js
+
+> Learning React.js with Tuts Plus [course](http://code.tutsplus.com/courses/getting-started-with-reactjs)
+
 ## What is React?
 
 A view library, not a full framework, just the "V" in MVC.
@@ -35,7 +57,7 @@ This is why React also uses _JSX_, the syntax React uses to represent the view.
 
 ## Hello World Component
 
-[HTML](lesson01/index.html)
+[Example](lesson01/index.html)
 
 ### Properly transform JSX
 
@@ -44,6 +66,9 @@ To properly transform JSX in script tag, first line must be pragma
 ```
 /** @jsx React.DOM */
 ```
+
+JSX is an independent technology that was made with React in mind.
+The pragma links JSX and React together. It tells JSX to use the React.DOM namespace.
 
 ###  Define component with `React.createClass`
 
@@ -67,3 +92,13 @@ Second parameter is an HTML node that will act as container.
 
 Last parameter is an optional callback function, fired when component is finished rendering,
 but not commonly used.
+
+## JSX vs. React DOM
+
+[Example](lesson02/index.html)
+
+JSX allows for writing HTML like nodes in JavaScript (because React has no templating language).
+
+An alternative to JSX is to use the React.DOM namespace.
+
+JSX is syntactic sugar on top of React.DOM.
