@@ -15,6 +15,7 @@
   - [JSX vs. React DOM](#jsx-vs-react-dom)
   - [Managing State](#managing-state)
   - [{this.state.titleMessage}](#thisstatetitlemessage)
+  - [Props](#props)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -152,3 +153,21 @@ reactComponent.setState({
 _Reconciliation_ is the process by which React updates the DOM with each new render pass.
 When a new state change happens, React makes a new Virtual DOM tree, diffs it from the previous one,
 then only applies those diff's to the DOM.
+
+## Props
+
+[Example](lesson04/index.html)
+
+Props are used to make components composable. When state is modified, not only is the component re-rendered,
+but also all its child elements are re-rendered. State data is pushed down from top level component to child components.
+
+State is pushed from parent to child components via _props_. They're passed as attributes in JSX.
+Props are immutable. To update props, state must change.
+
+This makes components like state machines, given a new state, they re-render with their properties.
+
+Props can have default values. Can be validated by stating whether they're required and what type they should be.
+
+An _owner_ is a component that sets the props of other components.
+
+[6:00]
