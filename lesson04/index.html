@@ -29,7 +29,13 @@
       getInitialState: function() {
         return {
           isVisible: true,
-          titleMessage: 'Hello, World'
+          messages: [
+            'I like the world',
+            'Coffee flavored ice cream is highly underrated',
+            'My spoon is too big',
+            'Tuesday is coming. Did you bring yoru coat?',
+            'I am a banana'
+          ]
         }
       },
 
@@ -39,14 +45,15 @@
           display: this.state.isVisible ? 'block' : 'none'
         };
 
-        var subMessage = 'Its not good to see you';
-        // var subMessage = null;
+        var messages = this.state.messages.map(function(message) {
+          return <SubMessage message={message} />
+        });
 
         return (
           <div className="container jumbotron" style={inlineStyles}>
             <h2>Hello World</h2>
 
-            <SubMessage message={subMessage}/>
+            {messages}
           </div>
         );
       }

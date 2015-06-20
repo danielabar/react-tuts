@@ -14,8 +14,13 @@
     - [Render component with `React.renderComponent`](#render-component-with-reactrendercomponent)
   - [JSX vs. React DOM](#jsx-vs-react-dom)
   - [Managing State](#managing-state)
-  - [{this.state.titleMessage}](#thisstatetitlemessage)
   - [Props](#props)
+    - [Simple example](#simple-example)
+    - [Default Values](#default-values)
+  - [Hello World](#hello-world)
+  - [Hello World](#hello-world-1)
+    - [Validation](#validation)
+    - [Advanced Composition](#advanced-composition)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -162,7 +167,7 @@ Props are used to make components composable. When state is modified, not only i
 but also all its child elements are re-rendered. State data is pushed down from top level component to child components.
 
 State is pushed from parent to child components via _props_. They're passed as attributes in JSX.
-Props are immutable. To update props, state must change.
+Props are immutable. To update props, state must change. And state is only stored once at top level component.
 
 This makes components like state machines, given a new state, they re-render with their properties.
 
@@ -170,4 +175,154 @@ Props can have default values. Can be validated by stating whether they're requi
 
 An _owner_ is a component that sets the props of other components.
 
-[6:00]
+### Simple example
+
+Just before rendering component, declare a variable and pass it in as an attribute:
+
+```javascript
+var message = 'Yo!';
+
+var reactComponent = React.renderComponent(
+  <MessageBox titleMessage={message} />
+  document.getElementById('app');
+);
+```
+
+Then it can be used in the component render using an expression:
+
+```javascript
+var MessageBox = React.createClass({
+    // init...
+
+    render: function() {
+      return (
+        <div>
+          <h2>{this.props.titleMessage}</h2>
+        </div>
+      );
+    }
+});
+```
+
+In the console, can access the props associated with the component:
+
+```javascript
+reactComponent.props
+// Object {titleMessage: "Yo!"}
+```
+
+### Default Values
+
+Default values can be set for props using `getDefaultProps` function:
+
+```javascript
+var SubMessage = React.createClass({
+  getDefaultProps: function() {
+    return {
+      message: 'Its good to see you'
+    }
+  },
+
+  render: function() {
+    return (
+      <div>{this.props.message}</div>
+    );
+  }
+});
+```
+
+Prop values of the child component can be set when used in the parent,
+i.e. the parent component is an _owner_ of the child component.
+
+```javascript
+var MessageBox = React.createClass({
+
+  render: function() {
+
+    var subMessage = 'Its not good to see you';
+
+    return (
+      <div>
+        <h2>Hello World</h2>
+
+        <SubMessage message={subMessage}/>
+      </div>
+    );
+  }
+});
+```
+
+### Validation
+
+`propTypes` property can be used to validate prop types and whether they're required.
+For example, to declare that `message` must be a string:
+
+```javascript
+var SubMessage = React.createClass({
+  propTypes: {
+    message: React.PropTypes.string
+  },
+  getDefaultProps: function() {
+    return {
+      message: 'Its good to see you'
+    }
+  },
+  render: function() {
+    return (
+      <div>{this.props.message}</div>
+    );
+  }
+});
+
+```
+
+To declare that it must be a string AND required `React.PropTypes.string.isRequired`
+
+### Advanced Composition
+
+Declare an array of messages as part of the parent components initial state.
+Then in the `render` function, create an array of child components,
+each having its `message` prop set to an entry from the messages array.
+Then include this array of child components as part of the parents render method.
+
+```javascript
+var MessageBox = React.createClass({
+
+  getInitialState: function() {
+    return {
+      isVisible: true,
+      messages: [
+        'I like the world',
+        'Coffee flavored ice cream is highly underrated',
+        'My spoon is too big',
+        'Tuesday is coming. Did you bring yoru coat?',
+        'I am a banana'
+      ]
+    }
+  },
+
+  render: function() {
+
+    var messages = this.state.messages.map(function(message) {
+      return <SubMessage message={message} />
+    });
+
+    return (
+      <div>
+        <h2>Hello World</h2>
+
+        {messages}
+      </div>
+    );
+  }
+});
+```
+
+The component can be manipulated in the console by adding a new item
+
+```javascript
+var newMessagesArray = reactComponent.state.messages.concat('New Item');
+reactComponent.setState({
+  messages: newMessagesArray
+});
+```
