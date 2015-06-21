@@ -17,10 +17,9 @@
   - [Props](#props)
     - [Simple example](#simple-example)
     - [Default Values](#default-values)
-  - [Hello World](#hello-world)
-  - [Hello World](#hello-world-1)
     - [Validation](#validation)
-    - [Advanced Composition](#advanced-composition)
+    - [Composition](#composition)
+  - [Synthetic Events](#synthetic-events)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -278,7 +277,7 @@ var SubMessage = React.createClass({
 
 To declare that it must be a string AND required `React.PropTypes.string.isRequired`
 
-### Advanced Composition
+### Composition
 
 Declare an array of messages as part of the parent components initial state.
 Then in the `render` function, create an array of child components,
@@ -326,3 +325,68 @@ reactComponent.setState({
   messages: newMessagesArray
 });
 ```
+
+## Synthetic Events
+
+[Example](lesson05/index.html)
+
+React doesn't use native DOM events, instead it uses _synthetic events_,
+which are consistent with the W3C Standard.
+
+For example, add a button that when clicked, will add a new message to the list.
+Add camel case `onClick` expression to the JSX. Note this is not the same onClick event from DOM,
+this is specifically used by React.
+
+Camel case is the standard for all React event types (keyUp, mouseUp etc.).
+
+Note `<button className=...` rather than `<button class=...`
+(because it's JSX and cannot use reserved keyword `class`)
+
+```javascript
+var MessageBox = React.createClass({
+
+  handleAdd: function(e) {
+    // console.log(e);
+    console.log(e.target);
+  },
+
+  getInitialState: function() {
+    return {
+      messages: [
+        'I like the world',
+        'Coffee flavored ice cream is highly underrated',
+        'My spoon is too big',
+        'Tuesday is coming. Did you bring yoru coat?',
+        'I am a banana'
+      ]
+    }
+  },
+
+  render: function() {
+
+    var messages = this.state.messages.map(function(message) {
+      return <SubMessage message={message} />
+    });
+
+    return (
+      <div className="container">
+        <h2>Hello World</h2>
+        <button className="btn btn-primary" type="button" name="button" onClick={this.handleAdd}>Add</button>
+        {messages}
+      </div>
+    );
+  }
+});
+```
+
+The click handler receives an event of type _SyntheticXXXEvent_, for example `SyntheticMouseEvent`,
+not a native DOM event.
+
+React auto-binds `this` context to the component in event handlers.
+
+React uses _event delegation_. Even though the onClick event is declared for example,
+on an individual DOM element such as a button, doesn't mean the event is _attached_ to that element.
+
+React stores all event handlers at a top level node.
+At this node, React creates mappings for this handler and knows how to dispatch the event.
+This is more efficient than creating multiple event handlers on each individual dom element that requires it.
