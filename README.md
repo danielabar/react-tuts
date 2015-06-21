@@ -20,6 +20,7 @@
     - [Validation](#validation)
     - [Composition](#composition)
   - [Synthetic Events](#synthetic-events)
+  - [Using Refs](#using-refs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -390,3 +391,64 @@ on an individual DOM element such as a button, doesn't mean the event is _attach
 React stores all event handlers at a top level node.
 At this node, React creates mappings for this handler and knows how to dispatch the event.
 This is more efficient than creating multiple event handlers on each individual dom element that requires it.
+
+## Using Refs
+
+[Example](lesson06/index.html)
+
+Refs are used to access DOM nodes within components.
+Use refs when you need to extract values from the DOM (eg: text boxes, radio buttons etc).
+
+`React.createClass` does not create the real HTML markup, it just creates a _blueprint_, and it's a function.
+Every time component renders, new nodes could be created.
+
+The `refs` property is used to get access to the backing nodes.
+
+```javascript
+var MessageBox = React.createClass({
+
+  handleAdd: function(e) {
+    console.log(this.refs.newMessage.getDOMNode());
+  },
+
+  render: function() {
+
+    return (
+      <div className="container" style={inlineStyles}>
+        <h2>Hello World</h2>
+        <input type="text" ref="newMessage">
+        <button className="btn btn-primary" onClick={this.handleAdd}>Add</button>
+        {messages}
+      </div>
+    );
+  }
+});
+```
+
+In the above example `newMessage` ref is a react component that has a `getDOMNode` function
+that returns the DOM node to which it is attached.
+
+```javascript
+reactComponent.refs.newMessage.getDOMNode();
+// --> <input type="text" data-reactid=".0.1">
+```
+
+To add the new message to the component's state, recall we do not modify the state directly, must call `setState`
+
+```javascript
+handleAdd: function(e) {
+  handleAdd: function(e) {
+
+    // extract value from DOM node via ref
+    var newMessage = this.refs.newMessage.getDOMNode().value;
+
+    // construct a new array of messages by concatenating current state messages with the new one from DOM
+    var newMessages = this.state.messages.concat([newMessage]);
+
+    // finally set the new state
+    this.setState({
+      messages: newMessages
+    });
+  }
+}
+```
