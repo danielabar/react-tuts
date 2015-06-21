@@ -1,0 +1,120 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>One-Way Directional Flow of Data</title>
+  <meta name="description" content=" " />
+  <meta name="author" content=" " />
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="MobileOptimized" content="320" />
+  <!-- Use maximum-scale and user-scalable at your own risk. It disables pinch/zoom. Think about usability/accessibility before including.-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href=" ">
+</head>
+<body>
+
+  <!-- container node -->
+  <div id="app"></div>
+
+  <script src="http://fb.me/react-0.11.1.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.11.1.js"></script>
+
+  <script type="text/jsx">
+    /** @jsx React.DOM */
+
+    var MessageBox = React.createClass({
+
+      deleteMessage: function() {
+        console.log('deleting...');
+      },
+
+      handleAdd: function(e) {
+
+        // extract value from DOM node via ref
+        var newMessage = this.refs.newMessage.getDOMNode().value;
+
+        // construct a new array of messages by concatenating current state messages with the new one from DOM
+        var newMessages = this.state.messages.concat([newMessage]);
+
+        // finally set the new state
+        this.setState({
+          messages: newMessages
+        });
+      },
+
+      getInitialState: function() {
+        return {
+          isVisible: true,
+          messages: [
+            'I like the world',
+            'Coffee flavored ice cream is highly underrated',
+            'My spoon is too big',
+            'Tuesday is coming. Did you bring yoru coat?',
+            'I am a banana'
+          ]
+        }
+      },
+
+      render: function() {
+
+        var inlineStyles = {
+          display: this.state.isVisible ? 'block' : 'none'
+        };
+
+        // Watch out: 'this' context inside map function is Window
+        //  bind is used to change this context to the MessageBox component
+        var messages = this.state.messages.map(function(message) {
+          console.log(this);
+          return <SubMessage message={message} onDelete={this.deleteMessage}/>
+        }.bind(this));
+
+        return (
+          <div className="container" style={inlineStyles}>
+            <h2>Hello World</h2>
+            <input type="text" ref="newMessage" />
+            <button className="btn btn-primary" onClick={this.handleAdd}>Add</button>
+            {messages}
+          </div>
+        );
+      }
+    });
+
+    var SubMessage = React.createClass({
+
+      handleDelete: function(e) {
+        console.log(this.props);
+      },
+
+      propTypes: {
+        message: React.PropTypes.string
+      },
+
+      getDefaultProps: function() {
+        return {
+          message: 'Its good to see you'
+        }
+      },
+
+      render: function() {
+        return (
+          <div>
+            {this.props.message}
+            <button onClick={this.handleDelete} className="btn btn-danger">&times;</button>
+          </div>
+        );
+      }
+    });
+
+
+    var reactComponent = React.renderComponent(
+      <MessageBox />,
+      document.getElementById('app')
+    );
+
+  </script>
+
+</body>
+</html>

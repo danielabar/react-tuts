@@ -452,3 +452,12 @@ handleAdd: function(e) {
   }
 }
 ```
+
+## One-Way Directional Flow of Data
+
+[Example](lesson07/index.html)
+
+State can only be modified at top level component. Callbacks are used if a child component
+needs to inform its parent about a state change.
+
+For example, add a Delete button to the SubMessage component that deletes the selected message.
