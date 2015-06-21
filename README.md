@@ -14,6 +14,7 @@
     - [Render component with `React.renderComponent`](#render-component-with-reactrendercomponent)
   - [JSX vs. React DOM](#jsx-vs-react-dom)
   - [Managing State](#managing-state)
+  - [{this.state.titleMessage}](#thisstatetitlemessage)
   - [Props](#props)
     - [Simple example](#simple-example)
     - [Default Values](#default-values)
@@ -21,6 +22,7 @@
     - [Composition](#composition)
   - [Synthetic Events](#synthetic-events)
   - [Using Refs](#using-refs)
+  - [One-Way Directional Flow of Data](#one-way-directional-flow-of-data)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -461,3 +463,95 @@ State can only be modified at top level component. Callbacks are used if a child
 needs to inform its parent about a state change.
 
 For example, add a Delete button to the SubMessage component that deletes the selected message.
+
+Start by adding delete button to child component and attach click handler:
+
+```javascript
+var SubMessage = React.createClass({
+
+  // Cannot access state directly here
+  handleDelete: function(e) {
+    console.log(this.props);
+  },
+
+  render: function() {
+    return (
+      <div>
+        {this.props.message}
+        <button onClick={this.handleDelete} className="btn btn-danger">&times;</button>
+      </div>
+    );
+  }
+});
+
+```
+
+Wire up a callback in parent component
+
+```javascript
+var MessageBox = React.createClass({
+
+  deleteMessage: function(message) {
+  },
+
+  render: function() {
+
+    // Watch out: 'this' context inside map function is Window
+    //  bind is used to change this context to the MessageBox component
+    var messages = this.state.messages.map(function(message) {
+      return <SubMessage message={message} onDelete={this.deleteMessage}/>
+    }.bind(this));
+
+    return (
+      <div className="container" style={inlineStyles}>
+        <h2>Hello World</h2>
+        <input type="text" ref="newMessage" />
+        <button className="btn btn-primary" onClick={this.handleAdd}>Add</button>
+        {messages}
+      </div>
+    );
+  }
+});
+```
+
+Now in child component, when delete button is clicked, invoke the callback via props:
+
+```javascript
+var SubMessage = React.createClass({
+
+  handleDelete: function(e) {
+    this.props.onDelete(this.props.message);
+  },
+
+  render: function() {
+    return (
+      <div>
+        {this.props.message}
+        <button onClick={this.handleDelete} className="btn btn-danger">&times;</button>
+      </div>
+    );
+  }
+});
+
+```
+
+Finally, implement the delete method in the parent component:
+
+```javascript
+var MessageBox = React.createClass({
+
+  deleteMessage: function(message) {
+
+    // Use lodash to create a new array with all the items except for message
+    var newMessages = _.without(this.state.messages, message);
+
+    // Set the newly constructed message in state
+    this.setState({
+      messages: newMessages
+    });
+  },
+
+  // render and other methods...
+
+});
+```
