@@ -14,7 +14,6 @@
     - [Render component with `React.renderComponent`](#render-component-with-reactrendercomponent)
   - [JSX vs. React DOM](#jsx-vs-react-dom)
   - [Managing State](#managing-state)
-  - [{this.state.titleMessage}](#thisstatetitlemessage)
   - [Props](#props)
     - [Simple example](#simple-example)
     - [Default Values](#default-values)
@@ -23,6 +22,7 @@
   - [Synthetic Events](#synthetic-events)
   - [Using Refs](#using-refs)
   - [One-Way Directional Flow of Data](#one-way-directional-flow-of-data)
+  - [Comparing Angular's Two-Way Data Binding to React](#comparing-angulars-two-way-data-binding-to-react)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -555,3 +555,27 @@ var MessageBox = React.createClass({
 
 });
 ```
+
+## Comparing Angular's Two-Way Data Binding to React
+
+Two-way data binding refers to the automatic synchronization between the model and the view.
+Every time data is updated in the view, it automatically syncs back to the model and vice versa.
+This is a non feature in React.
+
+Although two-way data binding is convenient when dealing with forms,
+it can become problematic when dealing with _computed properties_,
+properties that are calculated by one or more dependent properties.
+
+In the case of a computed property, with Angular, it requres watching (`$scope.$watch`) the values
+of the depended on fields, and recalculating the computed result whenever any of them changes.
+This makes it hard to determine what is changing the state in the application.
+
+For example, [a simple application](lesson08/index.html) that takes two inputs, and displays a computed field with their sum.
+
+Use reactive addons to make the process of wiring change handlers less tedious.
+
+```
+<script src="//fb.me/react-with-addons-0.11.1.js"></script>
+```
+
+[4:05]
